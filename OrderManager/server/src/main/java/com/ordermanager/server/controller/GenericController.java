@@ -7,17 +7,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/v1")
 public abstract class GenericController<T> {
-
     private final GenericService<T, Long> genericService;
 
     public GenericController(GenericService<T, Long> genericService) {
         this.genericService = genericService;
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<T>> getAll() {
         return ResponseEntity.ok(genericService.findAll());
     }
@@ -27,7 +24,7 @@ public abstract class GenericController<T> {
         return ResponseEntity.ok(genericService.findById(id));
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<T> create(@RequestBody @Valid T entity) {
         return ResponseEntity.ok(genericService.save(entity));
     }
