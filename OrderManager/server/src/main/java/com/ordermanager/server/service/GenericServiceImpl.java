@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Transactional
@@ -21,8 +22,8 @@ public class GenericServiceImpl<T, ID> implements GenericService<T, ID> {
     }
 
     @Override
-    public Optional<T> findById(ID id) {
-        return repository.findById(id);
+    public T findById(ID id) {
+        return repository.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
     @Override
@@ -32,7 +33,7 @@ public class GenericServiceImpl<T, ID> implements GenericService<T, ID> {
 
     @Override
     public T update(ID id, T entity) {
-        if (repository.findById(id) != null) {
+        if (repository.findById(id).isPresent()) {
             return repository.save(entity);
         } else {
             throw new IllegalArgumentException("Entity not found");

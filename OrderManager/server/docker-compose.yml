@@ -8,21 +8,19 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./:/app
       - appdeps:/root/.m2
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - SPRING_DEVTOOLS_RESTART_ENABLED=true
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://order_manager-dev:5432/devdb
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://order_manager_db:5432/devdb
       - SPRING_DATASOURCE_USERNAME=devuser
       - SPRING_DATASOURCE_PASSWORD=devpass
     depends_on:
       - db
-    mem_limit: 512m
 
   db:
     image: postgres:15.4-alpine
-    container_name: order_manager-dev
+    container_name: order_manager_db
     environment:
       POSTGRES_USER: devuser
       POSTGRES_PASSWORD: devpass
@@ -31,7 +29,6 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
-    mem_limit: 256m
 
 volumes:
   pgdata:

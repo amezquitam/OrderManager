@@ -1,11 +1,13 @@
 package com.ordermanager.server.service;
 
-import java.util.List;
-import java.util.Optional;
+import org.springframework.stereotype.Component;
 
+import java.util.List;
+
+@Component
 public interface GenericService<T, ID> {
     List<T> findAll();
-    Optional<T> findById(ID id);
+    T findById(ID id);
     T save(T entity);
     T update(ID id, T entity);
     void delete(ID id);
