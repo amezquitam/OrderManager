@@ -2,6 +2,7 @@ package com.ordermanager.server.controller;
 
 import com.ordermanager.server.service.GenericService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,8 +16,22 @@ public abstract class GenericController<T> {
     }
 
     @GetMapping
-    public ResponseEntity<List<T>> getAll() {
-        return ResponseEntity.ok(genericService.findAll());
+    public ResponseEntity<List<T>> getAll(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size) {
+        var all = genericService.findAll();
+        int start = page * size;
+        int end = Math.min(start + size, all.size());
+
+        var paged = all.subList(start, end);
+        var pagesize = paged.size();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Range", "items " + start + "-" + (end - 1) + "/" + pagesize);
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(paged);
     }
 
     @GetMapping("/{id}")
