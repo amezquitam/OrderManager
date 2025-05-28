@@ -27,7 +27,7 @@ public abstract class GenericController<T> {
         var pagesize = paged.size();
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Range", "items " + start + "-" + (end - 1) + "/" + pagesize);
+        headers.add("Content-Range", "items " + start + "-" + Math.max(end - 1, 0) + "/" + pagesize);
 
         return ResponseEntity.ok()
                 .headers(headers)
@@ -44,7 +44,7 @@ public abstract class GenericController<T> {
         return ResponseEntity.ok(genericService.save(entity));
     }
 
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<T> update(@RequestBody @Valid T entity, @PathVariable Long id) {
         return ResponseEntity.ok(genericService.update(id, entity));
     }
