@@ -195,9 +195,9 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (users.length > 0) localStorage.setItem('users', JSON.stringify(users));
   }, [users]);
 
-  useEffect(() => {
-    if (products.length > 0) localStorage.setItem('products', JSON.stringify(products));
-  }, [products]);
+  // useEffect(() => {
+  //   if (products.length > 0) localStorage.setItem('products', JSON.stringify(products));
+  // }, [products]);
 
   useEffect(() => {
     if (productsDefault.length > 0) localStorage.setItem('products', JSON.stringify(productsDefault));

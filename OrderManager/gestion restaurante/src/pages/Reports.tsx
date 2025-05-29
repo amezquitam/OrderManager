@@ -30,7 +30,7 @@ ChartJS.register(
 );
 
 const Reports: React.FC = () => {
-  const { orders, products } = useData();
+  const { orders, productsDefault: products } = useData();
   const [timeRange, setTimeRange] = useState<'daily' | 'weekly' | 'monthly'>('daily');
   const [salesData, setSalesData] = useState<any>(null);
   const [topProducts, setTopProducts] = useState<any>(null);
