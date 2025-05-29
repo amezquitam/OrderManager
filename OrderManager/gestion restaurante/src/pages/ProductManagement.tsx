@@ -8,9 +8,9 @@ const ProductManagement: React.FC = () => {
   const {
     productsDefault: products,
     ingredients,
-    addProduct,
-    updateProduct,
-    deleteProduct
+    addProductDefault: addProduct,
+    updateProductDefault: updateProduct,
+    deleteProductDefault: deleteProduct,
   } = useData();
 
   const [isAddingProduct, setIsAddingProduct] = useState(false);

@@ -142,7 +142,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const storedRestaurants = localStorage.getItem('restaurants');
       const storedUsers = localStorage.getItem('users');
       const storedProducts = await getProducts(DEFAULT_RESTAURANT_ID);
-      const storedProductsDefault = localStorage.getItem('productsDefault');
+      const storedProductsDefault = localStorage.getItem('products');
       const storedOrders = await getOrders(DEFAULT_RESTAURANT_ID);
       const storedTables = await getTables(DEFAULT_RESTAURANT_ID);
       const storedIngredients = localStorage.getItem('ingredients');
@@ -194,6 +194,10 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     if (users.length > 0) localStorage.setItem('users', JSON.stringify(users));
   }, [users]);
+
+  useEffect(() => {
+    if (products.length > 0) localStorage.setItem('products', JSON.stringify(products));
+  }, [products]);
 
   useEffect(() => {
     if (productsDefault.length > 0) localStorage.setItem('products', JSON.stringify(productsDefault));
@@ -332,7 +336,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const refreshData = () => {
     const storedRestaurants = localStorage.getItem('restaurants');
     const storedUsers = localStorage.getItem('users');
-    const storedProducts = localStorage.getItem('productsDefault');
+    const storedProducts = localStorage.getItem('products');
     const storedOrders = localStorage.getItem('orders');
     const storedTables = localStorage.getItem('tables');
     const storedIngredients = localStorage.getItem('ingredients');
