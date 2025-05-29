@@ -21,21 +21,13 @@ const Header: React.FC = () => {
         
         <div className="flex items-center">
           <div className="mr-3 text-right">
-            <p className="text-sm font-medium text-gray-900">{currentUser?.name}</p>
+            <p className="text-sm font-medium text-gray-900">{currentUser?.firstName}</p>
             <p className="text-xs text-gray-500 capitalize">{currentUser?.role}</p>
           </div>
           <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
-            {currentUser?.avatar ? (
-              <img 
-                src={currentUser.avatar} 
-                alt={currentUser.name} 
-                className="h-full w-full object-cover"
-              />
-            ) : (
-              <span className="text-gray-700 text-lg font-medium">
-                {currentUser?.name.charAt(0)}
-              </span>
-            )}
+            <span className="text-gray-700 text-lg font-medium">
+              {currentUser?.firstName.charAt(0)}
+            </span>
           </div>
         </div>
       </div>

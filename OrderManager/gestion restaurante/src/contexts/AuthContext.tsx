@@ -37,16 +37,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setLoading(false);
   }, []);
 
+  const getUsers = async () => {
+    // In a real app, this would be an API call
+    const response = await axiosInstance.get('/user');
+    const rawUsers = response.data as any[];
+    const users = rawUsers.map(user => {
+      user.role = user.role.role;
+      return user;
+    });
+    
+    return users as User[];
+  };
+
   const login = async (email: string, password: string) => {
     // In a real app, this would be an API call
     if (!email || !password) {
       throw new Error('Email and password are required');
     }
 
-    const usersResponse = await axiosInstance.get('/users');
-    const users: User[] = usersResponse.data;
+    const users = await getUsers();
     const user = users.find((u: User) => u.email === email && u.password === password);
     
+    console.log('Users fetched:', users);
+    console.log('User found:', user);
+    console.log('Email:', email);
+    console.log('Password:', password);
+
     if (user) {
       // Don't store password in memory
       const { password, ...userWithoutPassword } = user;

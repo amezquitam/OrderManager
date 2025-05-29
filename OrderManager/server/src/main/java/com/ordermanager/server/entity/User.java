@@ -16,7 +16,6 @@ public class User {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "role_id")
     private Role role;
 
     private String firstName;

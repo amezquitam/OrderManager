@@ -5,17 +5,24 @@ import { Product } from '../types';
 import { PencilIcon, TrashIcon, Plus, Star } from 'lucide-react';
 
 const ProductManagement: React.FC = () => {
-  const { products, ingredients, addProduct, updateProduct, deleteProduct } = useData();
+  const {
+    productsDefault: products,
+    ingredients,
+    addProduct,
+    updateProduct,
+    deleteProduct
+  } = useData();
+
   const [isAddingProduct, setIsAddingProduct] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  
+
   // Extract unique categories
   const categories = ['all', ...Array.from(new Set(products.map(p => p.category)))];
-  
+
   // Filter products by selected category
-  const filteredProducts = selectedCategory === 'all' 
-    ? products 
+  const filteredProducts = selectedCategory === 'all'
+    ? products
     : products.filter(p => p.category === selectedCategory);
 
   const [formData, setFormData] = useState<Omit<Product, 'id' | 'ratings'>>({
@@ -42,7 +49,7 @@ const ProductManagement: React.FC = () => {
 
   const handleIngredientChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const options = e.target.options;
-    const selectedValues = [];
+    const selectedValues: string[] = [];
     for (let i = 0; i < options.length; i++) {
       if (options[i].selected) {
         selectedValues.push(options[i].value);
@@ -93,9 +100,9 @@ const ProductManagement: React.FC = () => {
     setEditingProduct(null);
   };
 
-  // Calculate average rating
-  const getAverageRating = (ratings: Product['ratings']) => {
-    if (!ratings.length) return 0;
+  // Fixed getAverageRating to handle undefined or empty ratings
+  const getAverageRating = (ratings?: Product['ratings']) => {
+    if (!ratings || ratings.length === 0) return '0.0';
     const sum = ratings.reduce((acc, curr) => acc + curr.rating, 0);
     return (sum / ratings.length).toFixed(1);
   };
@@ -268,7 +275,7 @@ const ProductManagement: React.FC = () => {
             </select>
           </div>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
           {filteredProducts.length > 0 ? (
             filteredProducts.map(product => (
@@ -286,12 +293,12 @@ const ProductManagement: React.FC = () => {
                     <span className="text-lg font-bold text-gray-900">${product.price.toFixed(2)}</span>
                   </div>
                   <p className="text-sm text-gray-500 mt-1 line-clamp-2">{product.description}</p>
-                  
+
                   <div className="flex justify-between items-center mt-3">
                     <div className="flex items-center">
                       <Star className="h-4 w-4 text-yellow-400 mr-1" />
                       <span className="text-sm text-gray-700">
-                        {getAverageRating(product.ratings)} ({product.ratings.length})
+                        {getAverageRating(product.ratings)} ({product.ratings?.length ?? 0})
                       </span>
                     </div>
                     <span className={`px-2 py-1 text-xs rounded-full ${
@@ -302,7 +309,7 @@ const ProductManagement: React.FC = () => {
                       {product.isAvailable ? 'Available' : 'Unavailable'}
                     </span>
                   </div>
-                  
+
                   <div className="flex justify-between items-center mt-4 pt-3 border-t border-gray-100">
                     <span className="text-xs text-gray-500">{product.category}</span>
                     <div className="flex space-x-2">

@@ -23,4 +23,7 @@ public class Order {
 
     private String status;
     private ZonedDateTime timestamp;
+    
+    @ManyToOne
+    private TableEntity table;
 }

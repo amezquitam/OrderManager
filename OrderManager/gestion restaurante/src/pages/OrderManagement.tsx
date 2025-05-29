@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import MainLayout from '../components/Layout/MainLayout';
 import { useData } from '../contexts/DataContext';
-import { Order } from '../types';
+import { Order, OrderWithProducts } from '../types';
 import { Clock, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
 
 const OrderManagement: React.FC = () => {
@@ -50,8 +50,8 @@ const OrderManagement: React.FC = () => {
     updateOrderStatus(orderId, newStatus);
   };
 
-  const calculateTotal = (order: Order) => {
-    return order.items.reduce((total, item) => total + (item.price * item.quantity), 0);
+  const calculateTotal = (order: OrderWithProducts) => {
+    return order.products.reduce((total, item) => total + (item.product.price * item.quantity), 0);
   };
 
   return (
@@ -84,10 +84,10 @@ const OrderManagement: React.FC = () => {
                   <div className="flex justify-between items-start mb-4">
                     <div>
                       <h3 className="text-lg font-medium text-gray-900">
-                        Order #{order.id.substring(0, 8)}
+                        Order #{String(order.id).substring(0, 8)}
                       </h3>
                       <p className="text-sm text-gray-500">
-                        Table {tables.find(t => t.id === order.tableId)?.number || 'N/A'}
+                        Table {tables.find(t => t.id === order.table.id)?.name || 'N/A'}
                       </p>
                     </div>
                     <div className="flex items-center space-x-4">
@@ -103,11 +103,11 @@ const OrderManagement: React.FC = () => {
                         <option value="cancelled">Cancelled</option>
                       </select>
                       <span className={`flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                        order.paymentStatus === 'paid' 
+                        order.status === 'paid' 
                           ? 'bg-green-100 text-green-800' 
                           : 'bg-red-100 text-red-800'
                       }`}>
-                        {order.paymentStatus === 'paid' ? 'Paid' : 'Pending Payment'}
+                        {order.status === 'paid' ? 'Paid' : 'Pending Payment'}
                       </span>
                     </div>
                   </div>
@@ -115,8 +115,8 @@ const OrderManagement: React.FC = () => {
                   <div className="border-t border-gray-200 pt-4">
                     <div className="flow-root">
                       <ul className="-my-5 divide-y divide-gray-200">
-                        {order.items.map((item, index) => {
-                          const product = products.find(p => p.id === item.productId);
+                        {order.products.map((item, index) => {
+                          const product = products.find(p => p.id === item.product.id);
                           return (
                             <li key={index} className="py-5">
                               <div className="flex items-center space-x-4">
@@ -125,17 +125,17 @@ const OrderManagement: React.FC = () => {
                                     {product?.name || 'Unknown Product'}
                                   </p>
                                   <p className="text-sm text-gray-500">
-                                    Quantity: {item.quantity} × ${item.price.toFixed(2)}
+                                    Quantity: {item.quantity} × ${item.product.price.toFixed(2)}
                                   </p>
-                                  {item.notes && (
+                                  {item.product.description && (
                                     <p className="text-sm text-gray-500 italic">
-                                      Note: {item.notes}
+                                      Note: {item.product.description}
                                     </p>
                                   )}
                                 </div>
                                 <div className="flex-shrink-0">
                                   <p className="text-sm font-medium text-gray-900">
-                                    ${(item.quantity * item.price).toFixed(2)}
+                                    ${(item.quantity * item.product.price).toFixed(2)}
                                   </p>
                                 </div>
                               </div>
@@ -149,7 +149,7 @@ const OrderManagement: React.FC = () => {
                   <div className="border-t border-gray-200 mt-4 pt-4">
                     <div className="flex justify-between items-center">
                       <p className="text-sm text-gray-500">
-                        Ordered at: {new Date(order.createdAt).toLocaleString()}
+                        Ordered at: {new Date(order.timestamp).toLocaleString()}
                       </p>
                       <p className="text-lg font-bold text-gray-900">
                         Total: ${calculateTotal(order).toFixed(2)}

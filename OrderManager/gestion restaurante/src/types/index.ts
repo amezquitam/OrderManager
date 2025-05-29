@@ -1,47 +1,44 @@
-// User related types
-export type UserRole = 'admin' | 'cook' | 'waiter';
+export type UserRole = 'admin' | 'cook' | 'waiter' | 'user';
 
 export interface User {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
-  role: UserRole;
-  isActive: boolean;
-  avatar?: string;
-}
-
-// Restaurant related types
-export interface OperatingHour {
-  day: string;
-  open: string;
-  close: string;
-  isOpen: boolean;
+  role: { id: string; role: UserRole };
+  active: boolean;
+  verified: boolean;
 }
 
 export interface Restaurant {
   id: string;
   name: string;
   image: string;
-  location: string;
+  gmapsLocation: string;
   address: string;
   instagram?: string;
   facebook?: string;
   whatsapp?: string;
-  operatingHours: OperatingHour[];
+  active: boolean;
 }
 
-// Product related types
-export interface ProductCategory {
+export interface OrderWithProducts {
   id: string;
-  name: string;
+  client: { id: string };
+  status: string;
+  timestamp: string;
+  products: { product: Product; quantity: number }[];
+  restaurant: Restaurant;
+  table: TableEntity;
 }
 
-export interface ProductRating {
-  userId: string;
-  rating: number;
-  comment?: string;
-  date: string;
+export interface Schedule {
+  id: string;
+  restaurant: { id: string };
+  weekday: string;
+  openingHour: number;
+  closingHour: number;
 }
 
 export interface Product {
@@ -50,76 +47,96 @@ export interface Product {
   description: string;
   price: number;
   image: string;
-  category: string;
-  ingredients: string[];
-  isAvailable: boolean;
-  ratings: ProductRating[];
+  active: boolean;
+  restaurant: { id: string };
 }
 
-// Order related types
-export type OrderStatus = 'pending' | 'preparing' | 'ready' | 'delivered' | 'cancelled';
+export interface Rating {
+  id: string;
+  user: { id: string };
+  product: { id: string };
+  rating: number;
+  comment: string;
+}
 
-export interface OrderItem {
-  productId: string;
+export interface ProductIngredient {
+  id: string;
+  product: { id: string };
+  ingredient: { id: string };
   quantity: number;
-  price: number;
-  notes?: string;
 }
-
-export interface Order {
-  id: string;
-  customerId?: string;
-  customerName: string;
-  items: OrderItem[];
-  totalAmount: number;
-  status: OrderStatus;
-  tableId?: string;
-  createdAt: string;
-  readyAt?: string;
-  deliveredAt?: string;
-  paymentStatus?: 'pending' | 'paid';
-}
-
-// Table related types
-export interface TableItem {
-  id: string;
-  number: number;
-  capacity: number;
-  isOccupied: boolean;
-  currentOrderId?: string;
-}
-
-// Inventory related types
-export type UnitOfMeasure = 'kg' | 'g' | 'l' | 'ml' | 'unit' | 'box';
 
 export interface Ingredient {
   id: string;
   name: string;
   description?: string;
   category: string;
-  unit: UnitOfMeasure;
-  stock: number;
+  unit: string;
+  currentStock: number;
   minStock: number;
-  supplierId?: string;
 }
 
 export interface Supplier {
   id: string;
   name: string;
-  contact: string;
-  phone: string;
-  email: string;
-  products: string[];
+  restaurant: { id: string };
 }
 
-// Promotion related types
+export interface Purchase {
+  id: string;
+  supplier: { id: string };
+  date: string; // YYYY-MM-DD
+}
+
+export interface PurchaseIngredient {
+  id: string;
+  ingredient: { id: string };
+  purchase: { id: string };
+  quantity: number;
+}
+
 export interface Promotion {
   id: string;
-  title: string;
+  product: { id: string };
   description: string;
-  startDate: string;
-  endDate: string;
-  discount: number;
-  productIds: string[];
-  isActive: boolean;
+  startDate: string; // YYYY-MM-DD
+  endDate: string;   // YYYY-MM-DD
+  visible: boolean;
+}
+
+export interface Order {
+  id: string;
+  client: { id: string };
+  status: string;
+  timestamp: string; // ISO-8601
+  table: TableEntity;
+}
+
+export interface OrderDetail {
+  id: string;
+  product: { id: string };
+  order: { id: string };
+  quantity: number;
+}
+
+export interface Payment {
+  id: string;
+  order: { id: string };
+  timestamp: string; // ISO-8601
+  amount: number;
+  paymentMethod: string;
+  invoiceUrl: string;
+}
+
+export interface TableEntity {
+  id: string;
+  name: string;
+  restaurant: { id: string };
+}
+
+export interface UserRestaurantRole {
+  id: string;
+  user: { id: string };
+  restaurant: { id: string };
+  role: UserRole;
 }
